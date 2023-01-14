@@ -23,58 +23,92 @@ type RequestBody struct {
 	Number string `json:"number"`
 }
 
-type Size struct {
-	size int `json:size`
-}
-
 func (sc *StackController) Push(c *fiber.Ctx) {
 
-	// item := new(Item)
-	// err := c.Body()
-	// number, err := strconv.Atoi(c.FormValue("item"))
 	var requestBody RequestBody
 	if err := c.BodyParser(&requestBody); err != nil {
 		fmt.Println(requestBody.Number)
-		c.Status(500).Send("Invalid item value")
+		c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
+			"code":    fiber.StatusBadRequest,
+			"message": "Invalid item value",
+			"content": "",
+		})
 		return
 	}
 	num, err := strconv.Atoi(requestBody.Number)
 	fmt.Println(num)
 	if err != nil {
-		c.Status(fiber.StatusBadRequest).Send("Invalid item value")
+		c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
+			"code":    fiber.StatusBadRequest,
+			"message": "Invalid item value",
+			"content": "",
+		})
 		return
 	}
 	if sc.stack.Push(num) {
-		c.Send("Item added to stack")
+		c.Status(fiber.StatusCreated).JSON(&fiber.Map{
+			"code":    fiber.StatusCreated,
+			"message": "Item added to stack",
+			"content": "",
+		})
+
 	} else {
-		c.Status(fiber.StatusBadRequest).Send("Stack is full")
+		c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
+			"code":    fiber.StatusBadRequest,
+			"message": "Stack is full",
+			"content": "",
+		})
+
 	}
 }
 
 func (sc *StackController) Pop(c *fiber.Ctx) {
 	item, ok := sc.stack.Pop()
-	fmt.Print(item)
 	if ok {
-		c.Send("Popped item: " + strconv.Itoa(item))
+		c.Status(fiber.StatusOK).JSON(&fiber.Map{
+			"code":    fiber.StatusOK,
+			"message": "Popped item : ",
+			"content": strconv.Itoa(item),
+		})
 	} else {
-		c.Status(fiber.StatusBadRequest).Send("Stack is empty")
+		c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
+			"code":    fiber.StatusBadRequest,
+			"message": "Stack is empty",
+			"content": "",
+		})
 	}
 }
 
 func (sc *StackController) Top(c *fiber.Ctx) {
 	item, ok := sc.stack.Top()
 	if ok {
-		c.Send("Top item: " + strconv.Itoa(item))
+		c.Status(fiber.StatusOK).JSON(&fiber.Map{
+			"code":    fiber.StatusOK,
+			"message": "Top Item : ",
+			"content": strconv.Itoa(item),
+		})
 	} else {
-		c.Status(fiber.StatusBadRequest).Send("Stack is empty")
+		c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
+			"code":    fiber.StatusOK,
+			"message": "Stack is empty",
+			"content": "",
+		})
 	}
 }
 
 func (sc *StackController) Display(c *fiber.Ctx) {
 	if sc.stack.GetTop() == -1 {
-		c.Status(fiber.StatusBadRequest).Send("Stack is empty")
+		c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
+			"code":    fiber.StatusBadRequest,
+			"message": "Stack is empty",
+			"content": "",
+		})
 		return
 	}
 	data := sc.stack.GetData()[:sc.stack.GetTop()+1] // get all elements up to the top of the stack
-	c.JSON(data)
+	c.Status(fiber.StatusOK).JSON(&fiber.Map{
+		"code":    fiber.StatusOK,
+		"message": "Stack Content",
+		"content": data,
+	})
 }

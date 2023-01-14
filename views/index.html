@@ -12,13 +12,18 @@
           <form id="push-form">
             <div class="form-group">
               <label for="item">Enter item:</label>
-              <input type="number" class="form-control" id="item" name="item">
+              <!-- validation in HTML side -->
+              <input type="number" class="form-control" id="item" name="item" required min="1" max="100">
+              <br>
               <button type="submit" class="btn btn-primary btn-block">Push</button>
             </div>
           </form>
             <br>
             <button id="pop-button"  class="btn btn-danger btn-block">Pop</button>
+            <br>
             <button id="top-button"  class="btn btn-info btn-block">Top</button>
+            <br>
+            <button id="display-stack-button"  class="btn btn-info btn-block">Display Stack</button>
             <div id="result"></div>
          
         </div>

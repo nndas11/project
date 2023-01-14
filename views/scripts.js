@@ -2,35 +2,57 @@ const pushForm = document.getElementById('push-form');
 const popButton = document.getElementById('pop-button');
 const topButton = document.getElementById('top-button');
 const resultDiv = document.getElementById('result');
+const displayStackButton = document.getElementById('display-stack-button');
 
 pushForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const item = document.getElementById('item').value;
-    alert(item);
-    console.log(item);
+
+    //validation using javascript
+    const pattern = /^\d+$/;
+    if (!pattern.test(item)) {
+        alert("Invalid input. Only digits are allowed.");
+        return;
+    }
+
     fetch('/push', {
         method: 'POST',
         body: JSON.stringify({number:  item}),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+            'Content-Type': 'application/json' 
+        }
     })
-    .then(res => res.text())
+    .then(res => res.json())
     .then(data => {
-        resultDiv.innerHTML = data;
-    });
+        resultDiv.innerHTML = data.message + data.content;
+    }).catch(error => console.log(error));;
 });
 
 popButton.addEventListener('click', () => {
     fetch('/pop', {method: 'POST'})
-    .then(res => res.text())
+    .then(res => res.json())
     .then(data => {
-        resultDiv.innerHTML = data;
-    });
+        resultDiv.innerHTML = data.message + data.content;
+    }).catch(error => console.log(error));
 });
 
 topButton.addEventListener('click', () => {
     fetch('/top')
-    .then(res => res.text())
+    .then(res => res.json())
     .then(data => {
-        resultDiv.innerHTML = data;
-    });
+        resultDiv.innerHTML = data.message  + data.content;
+    }).catch(error => console.log(error));
+});
+
+
+
+displayStackButton.addEventListener('click', () => {
+    fetch('/display')
+    .then(res => res.json())
+    .then(data => {
+        resultDiv.innerHTML = data.message;
+        for (let i = 0; i < data.content.length; i++) {
+            resultDiv.innerHTML += "<p>" + data.content[i] + "</p>";
+        }
+    }).catch(error => console.log(error));
 });
