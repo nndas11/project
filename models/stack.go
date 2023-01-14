@@ -49,3 +49,10 @@ func (s *Stack) Display() []int {
 	}
 	return s.data[:s.top+1]
 }
+
+// new
+func (s *Stack) NewStack(size int) {
+	s.size = size
+	s.top = -1
+	s.data = make([]int, size)
+}

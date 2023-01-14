@@ -3,6 +3,35 @@ const popButton = document.getElementById('pop-button');
 const topButton = document.getElementById('top-button');
 const resultDiv = document.getElementById('result');
 const displayStackButton = document.getElementById('display-stack-button');
+const sizeForm = document.getElementById("size-form")
+
+
+
+sizeForm.addEventListener('submit', (event)=>{
+    event.preventDefault();
+    const item = document.getElementById('size').value;
+    console.log(item);
+
+    //validation using javascript
+    const pattern = /^\d+$/;
+    if (!pattern.test(item)) {
+        alert("Invalid input. Only digits are allowed.");
+        return;
+    }
+
+    fetch('/declare', {
+        method: 'POST',
+        body: JSON.stringify({number:  item}),
+        headers: { 
+            'Content-Type': 'application/json' 
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        resultDiv.innerHTML = data.message + data.content;
+    }).catch(error => console.log(error));;
+})
+
 
 pushForm.addEventListener('submit', (event) => {
     event.preventDefault();

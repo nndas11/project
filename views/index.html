@@ -9,6 +9,18 @@
         <div class="col-md-4 col-md-offset-4">
           <h1 class="text-center">Stack</h1>
           <br><br>
+
+          <form id="size-form">
+            <div class="size-group">
+              <label for="size">Enter size:</label>
+              <!-- validation in HTML side -->
+              <input type="number" class="form-control" id="size" name="size" required min="1" max="100">
+              <br>
+              <button type="submit" class="btn btn-primary btn-block">Enter</button>
+            </div>
+          </form>
+
+          
           <form id="push-form">
             <div class="form-group">
               <label for="item">Enter item:</label>
