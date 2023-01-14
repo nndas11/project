@@ -12,7 +12,7 @@ func main() {
 	stackController := controller.NewStackController(10)
 
 	app.Post("/push", stackController.Push)
-	app.Post("/pop", stackController.Pop)
+	app.Delete("/pop", stackController.Pop)
 	app.Get("/top", stackController.Top)
 	app.Get("/display", stackController.Display)
 	app.Listen(":3000")

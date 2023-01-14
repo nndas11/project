@@ -43,6 +43,9 @@ func (s *Stack) GetTop() int {
 	return s.top
 }
 
-func (s *Stack) GetData() []int {
-	return s.data
+func (s *Stack) Display() []int {
+	if s.top == -1 {
+		return nil
+	}
+	return s.data[:s.top+1]
 }

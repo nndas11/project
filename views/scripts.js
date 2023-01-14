@@ -29,7 +29,7 @@ pushForm.addEventListener('submit', (event) => {
 });
 
 popButton.addEventListener('click', () => {
-    fetch('/pop', {method: 'POST'})
+    fetch('/pop', {method: 'DELETE'})
     .then(res => res.json())
     .then(data => {
         resultDiv.innerHTML = data.message + data.content;
@@ -51,7 +51,7 @@ displayStackButton.addEventListener('click', () => {
     .then(res => res.json())
     .then(data => {
         resultDiv.innerHTML = data.message;
-        for (let i = 0; i < data.content.length; i++) {
+        for (let i = data.content.length-1; i>=0; i--) {
             resultDiv.innerHTML += "<p>" + data.content[i] + "</p>";
         }
     }).catch(error => console.log(error));

@@ -97,7 +97,10 @@ func (sc *StackController) Top(c *fiber.Ctx) {
 }
 
 func (sc *StackController) Display(c *fiber.Ctx) {
-	if sc.stack.GetTop() == -1 {
+
+	data := sc.stack.Display()
+
+	if data == nil {
 		c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
 			"code":    fiber.StatusBadRequest,
 			"message": "Stack is empty",
@@ -105,7 +108,6 @@ func (sc *StackController) Display(c *fiber.Ctx) {
 		})
 		return
 	}
-	data := sc.stack.GetData()[:sc.stack.GetTop()+1] // get all elements up to the top of the stack
 	c.Status(fiber.StatusOK).JSON(&fiber.Map{
 		"code":    fiber.StatusOK,
 		"message": "Stack Content",
