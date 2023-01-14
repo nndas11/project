@@ -79,9 +79,9 @@ displayStackButton.addEventListener('click', () => {
     fetch('/display')
     .then(res => res.json())
     .then(data => {
-        resultDiv.innerHTML = data.message;
+        resultDiv.innerHTML = data.message + ':';
         for (let i = data.content.length-1; i>=0; i--) {
-            resultDiv.innerHTML += "<p>" + data.content[i] + "</p>";
+            resultDiv.innerHTML += "<p style='display:inline'> &nbsp" + data.content[i] + "</p>";
         }
     }).catch(error => console.log(error));
 });
