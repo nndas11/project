@@ -3,7 +3,7 @@ package main
 import (
 	controller "proj/controllers"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
