@@ -86,6 +86,8 @@ displayStackButton.addEventListener('click', () => {
     }).catch(error => console.log(error));
 });
 
+
+// display content on page loading and reloading 
 async function displayContent(){
     const res = await fetch('/display');
     var data = await res.json();
