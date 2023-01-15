@@ -12,12 +12,6 @@ type StackController struct {
 	stack *models.Stack
 }
 
-// func NewStackController(size int) *StackController {
-// 	return &StackController{
-// 		stack: models.NewStack(size),
-// 	}
-// }
-
 // parse the json from request body
 type RequestBody struct {
 	Number string `json:"number"`

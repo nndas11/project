@@ -4,6 +4,8 @@ go 1.19
 
 require github.com/gofiber/fiber v1.14.6
 
+require github.com/stretchr/objx v0.5.0 // indirect
+
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

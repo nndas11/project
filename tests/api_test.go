@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"github.com/gofiber/fiber"
@@ -13,6 +14,7 @@ import (
 )
 
 type mockStack struct {
+	size  int
 	items []int
 }
 
@@ -47,7 +49,6 @@ func TestPopAPI(t *testing.T) {
 	app := fiber.New()
 	stack := &mockStack{}
 
-	// stackController := controller.StackController{}
 	app.Delete("/pop", func(c *fiber.Ctx) {
 		if stack.IsEmpty() {
 			c.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -90,7 +91,7 @@ func TestPopAPI(t *testing.T) {
 }
 
 type request struct {
-	Item int `json:"item"`
+	Item string `json:"item"`
 }
 
 func TestPushAPI(t *testing.T) {
@@ -106,7 +107,8 @@ func TestPushAPI(t *testing.T) {
 				"data":    "",
 			})
 		}
-		stack.Push(body.Item)
+		item, _ := strconv.Atoi(body.Item)
+		stack.Push(item)
 		c.JSON(fiber.Map{
 			"code":    fiber.StatusCreated,
 			"message": "Item added to stack.",
@@ -115,7 +117,7 @@ func TestPushAPI(t *testing.T) {
 	})
 
 	t.Run("Push item to stack", func(t *testing.T) {
-		reqBody := request{Item: 5}
+		reqBody := request{Item: "5"}
 		reqBodyBytes, _ := json.Marshal(reqBody)
 		req, _ := http.NewRequest(http.MethodPost, "/push", bytes.NewBuffer(reqBodyBytes))
 		req.Header.Add("Content-Type", "application/json")
@@ -139,8 +141,6 @@ type displayResponse struct {
 func TestDisplayAPI(t *testing.T) {
 	app := fiber.New()
 	stack := &mockStack{}
-
-	// stackController := controller.StackController{}
 	app.Get("/display", func(c *fiber.Ctx) {
 		if stack.IsEmpty() {
 			c.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -229,6 +229,49 @@ func TestTopAPI(t *testing.T) {
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, "Top element of stack", rsp.Message)
 		assert.Equal(t, 3, rsp.Data)
+	})
+
+}
+
+func TestSizeAPI(t *testing.T) {
+	app := fiber.New()
+	stack := &mockStack{}
+
+	app.Post("/size", func(c *fiber.Ctx) {
+		var body request
+		if err := c.BodyParser(&body); err != nil {
+			c.JSON(fiber.Map{
+				"code":    fiber.StatusBadRequest,
+				"message": "Give correct size",
+				"data":    "",
+			})
+		}
+		item, _ := strconv.Atoi(body.Item)
+		stack = &mockStack{
+			size:  item,
+			items: make([]int, 0, item),
+		}
+		c.JSON(fiber.Map{
+			"code":    fiber.StatusCreated,
+			"message": "Stack created.",
+			"data":    "",
+		})
+	})
+	//demo item added
+	stack.Push(1)
+	t.Run("Define stack size", func(t *testing.T) {
+		reqBody := request{Item: "5"}
+		reqBodyBytes, _ := json.Marshal(reqBody)
+		req, _ := http.NewRequest(http.MethodPost, "/size", bytes.NewBuffer(reqBodyBytes))
+		req.Header.Add("Content-Type", "application/json")
+		res, err := app.Test(req)
+		assert.Nil(t, err)
+		assert.Equal(t, http.StatusOK, res.StatusCode)
+		body, _ := ioutil.ReadAll(res.Body)
+		var rsp response
+		json.Unmarshal(body, &rsp)
+		assert.Equal(t, http.StatusCreated, rsp.Code)
+		assert.Equal(t, "Stack created.", rsp.Message)
 	})
 
 }
