@@ -12,7 +12,6 @@ func main() {
 	// stackController := controller.NewStackController(10)
 	stackController := controller.StackController{}
 
-	app.Get("", stackController.Display)
 	app.Post("/push", stackController.Push)
 	app.Delete("/pop", stackController.Pop)
 	app.Get("/top", stackController.Top)

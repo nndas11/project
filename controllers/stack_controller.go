@@ -144,8 +144,8 @@ func (sc *StackController) Display(c *fiber.Ctx) error {
 	data := sc.stack.Display()
 
 	if data == nil {
-		return c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
-			"code":    fiber.StatusBadRequest,
+		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
+			"code":    fiber.StatusOK,
 			"message": "Stack is empty",
 			"content": "",
 		})
